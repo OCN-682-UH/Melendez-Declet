@@ -31,51 +31,57 @@ FinalData <- CondData |>
   summarise(mean_depth= mean(Depth, na.rm = TRUE),
             mean_temp = mean(Temperature, na.rm = TRUE),
             mean_salinity = mean(Salinity, na.rm = TRUE)) |> 
-  write_csv(here("Week_05", "Outputs", "summary_stats_homework.csv"))
+  write_csv(here("Week_05", "Outputs", "summary_stats_homework.csv")) # Just to practice 
 
 
 ###### Graphing Data ######
 ## Temperature 
 
-# This website taught me how to add a second y axis using sec.axis: 
-# https://r-graph-gallery.com/line-chart-dual-Y-axis-ggplot2.html
+TempPlot <- FinalData |>
+  ggplot(aes(x = date_min,
+             y = mean_temp)) +
+  geom_line(color = "#0571b0") +
+  labs(x = "Time",
+       y = "Mean Temperature (°C)") +
+  theme_classic() +
+  theme(
+    axis.text.x = element_blank(), # This removes the x axis label and the values, doing this becuase I have a big patchwork 
+    axis.title.x = element_blank())
 
-TempDepthPlot <- FinalData |>
-  ggplot(aes(x = date_min)) +
-  geom_line(aes(y = mean_temp),
-            color = "#0571b0") +
-  scale_y_continuous(
-    name = "Mean Temperature (°C)",
-    sec.axis = sec_axis(transform = ~ . / 100,
-                        name = "Mean Depth (m)")) +
-  labs(x = "Time") +
-  theme_classic()
-
-TempDepthPlot
+TempPlot
 
 ## Salinity 
-SalDepthPlot <- FinalData |>
-  filter(mean_salinity > 29) |> # I only filter that weird data point @ 13:24, the salinity was at 29... something wrong with sensor data 
-  ggplot(aes(x = date_min)) +
-  geom_line(aes(y = mean_salinity),
-            color = "#008837") +
-  scale_y_continuous(
-    name = "Mean Salinity (PSU)",
-    breaks = c(32, 32.5, 33, 33.5, 34, 34.5, 35), 
-    sec.axis = sec_axis(transform = ~ . / 100,
-    name = "Mean Depth (m)")) +
-  labs(x = "Time") +
-  theme_classic()
-             
-SalDepthPlot
+SalPlot <- FinalData |>
+  ggplot(aes(x = date_min,
+             y = mean_salinity)) +
+  geom_line(color = "#008837") +
+  labs(x = "Time",
+       y = "Mean Salinity (PSU)") +
+  theme_classic() +
+  theme(axis.text.x = element_blank(), # Doing this for the patchwork 
+    axis.title.x = element_blank())
+
+SalPlot
+
+## Depth 
+DepthPlot <- FinalData |>
+  filter(mean_depth > 0.2) |> # Trying to filter the timepoint when the logger maybe wasn't deployed yet 
+  ggplot(aes(x = date_min,
+             y = mean_depth)) +
+  geom_line() + # Didn't add color here b/c I thought black would look nice with blue and green 
+  labs(x = "Time",
+       y = "Mean Depth (m)") +
+  theme_classic() 
+
+DepthPlot
 
 ## Final Patchwork 
-FinalPlot <- TempDepthPlot / SalDepthPlot +
-  plot_annotation(tag_levels = 'A')
+FinalPlot <- TempPlot / SalPlot / DepthPlot +
+  plot_annotation(tag_levels = 'A') # Add the letters to each plot 
 
 FinalPlot 
-ggsave(here("Week_05", "Outputs", "HomeworkPlot.png"),
-       width = 7,
-       height = 6)
+ggsave(here("Week_05", "Outputs", "Week5HomeworkPlot.png"),
+       width = 5,
+       height = 8)
 
 
