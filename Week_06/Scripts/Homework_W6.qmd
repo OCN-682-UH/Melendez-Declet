@@ -1,0 +1,106 @@
+---
+title: "Homework_W6"
+author:  "Carolina Melendez Declet"
+format: html
+---
+
+10/6/2025 
+
+Hello! This is my Quarto document for my **Week 6** homework. 
+
+Goals for this homework:
+
+- Create a table
+- Create a plot
+
+## Load Libraries 
+```{r}
+library(tidyverse) 
+library(here)
+library(kableExtra)
+```
+
+This loads the libraries I need to use for my analysis. 
+
+## Load Data 
+```{r}
+ChemData <- read_csv(here("Week_06","Data","chemicaldata_maunalua.csv"))
+
+view(ChemData)
+```
+This imports my dataset into R. This dataset is **seawater** samples for *water quality analysis*. 
+
+## Cleanup Dataset 
+```{r}
+ChemData_clean <- ChemData |>
+  drop_na() |> # removes all rows containing an NA
+  separate_wider_delim(
+    cols = Tide_time,
+    delim = "_",
+    names = c("Tide", "Time"),
+    cols_remove = FALSE) |>
+  mutate(Site_Zone = paste(Site, Zone, sep = ".")) # combines Site and Zone into one column
+
+view(ChemData_clean)
+
+```
+
+This code is from my **Week 4** homework. Since I'm using the same dataset again, I'm just fixing my data again. 
+
+## Filtering a Subset
+
+```{r}
+ChemData_HighTide <- ChemData_clean |>
+  filter(Tide == "High")
+
+view(ChemData_HighTide)
+```
+
+Filtered the data, so I can work with the **high tide** data only. Again, this code is also from my **Week 4** homework. 
+
+## Plotting pH Data 
+```{r}
+#| label: fig-high-tide-ph
+#| fig-cap: "pH measurements in seawater samples during high tide"
+#| fig-width: 7
+#| fig-height: 4
+
+
+ChemData_HighTide_pH <- ggplot(data = ChemData_HighTide, mapping = aes(x = Site_Zone,y = pH,color = Site_Zone)) +
+  geom_jitter(width = 0.12,height = 0,size = 1.5,alpha = 0.7) +
+  labs(x = "Site and Zone", y = "pH", color = "Site and Zone") +
+  scale_color_manual(values = c("#67001f", "#b2182b", "#d6604d", "#f4a582","#4393c3", "#2166ac", "#053061")) +
+  theme_classic()
+
+ChemData_HighTide_pH
+
+ggsave(here("Week_06", "Outputs", "Week6HomeworkPlot.png"),
+       width = 7,
+       height = 4)
+```
+
+@fig-high-tide-ph shows the pH values across different sites during high tide. My plot is in my outputs folder! 
+
+
+## Creating a Table 
+
+```{r}
+#| label: tbl-high-tide-ph
+#| tbl-cap: "Mean pH across sites during high tide."
+
+
+ChemData_HighTide |>
+  group_by(Site_Zone) |>
+  summarise(pH_mean = mean(pH, na.rm = TRUE)) |>
+  kbl() |>
+  kable_classic() |>
+  row_spec(c(2, 4, 6), bold = TRUE, color = "white", background = "green") |> # highlight every other row, just for fun
+  kable_styling(full_width = FALSE) 
+```
+
+
+Mean pH across sites during high tide are summarized in @tbl-high-tide-ph. 
+
+## Open Access 
+
+My homework is published here *https://01a112ec-8321-f9d8-3175-57f672955411.share.connect.posit.cloud/*

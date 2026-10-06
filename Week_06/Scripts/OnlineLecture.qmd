@@ -1,0 +1,57 @@
+---
+title: "OnlineLecture"
+author:  "Carolina Melendez Declet"
+format: html
+---
+
+10/5/2026 
+
+This Quarto document follows the online lecture for Week 6. 
+
+## Load Libraries 
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+library(here)
+library(dplyr)
+library(kableExtra)
+```
+
+This loads the libraries I need to use for my code. 
+
+## View data 
+```{r}
+view(penguins)
+```
+
+## Plots on Quarto 
+```{r}
+#| fig-height: 4
+#| label: penguin
+#| fig-cap: "Practice Plot in Quarto"
+
+
+penguins |> 
+  ggplot(aes(x = species, y = flipper_length_mm)) +
+  geom_jitter()
+```
+
+## Creating a Table with kableExtra 
+```{r}
+penguins |>
+  group_by(species) |>
+  summarise(billmean = mean(bill_length_mm, na.rm = TRUE)) |>
+  kbl() # make it a kable table
+```
+
+## Adding some style to Kable Table 
+```{r}
+penguins |>
+  group_by(species) |>
+  summarise(billmean = mean(bill_length_mm, na.rm = TRUE)) |>
+  kbl()  |> # make it a kable table
+  kable_classic() |> # add a theme
+  row_spec(2, bold = TRUE, color = "white", background = "red") |> # highlight row 2
+  kable_styling(full_width = FALSE) # don't make it so wide
+```
+

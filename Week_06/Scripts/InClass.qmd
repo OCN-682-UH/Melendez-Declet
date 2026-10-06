@@ -1,0 +1,24 @@
+---
+title: "My First Quarto Doc"
+author: "Carolina Melendez Declet"
+format: html
+
+---
+
+## Load Libraries 
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+
+#view(penguins)
+
+```
+
+This loads the libraries I need to use for my code. 
+
+## Dataset Description 
+
+There are `r nrow(penguins)` penguins rows and `r ncol(penguins)` columns.
+
+The mean bill length (mn) is `r round(mean(penguins$bill_length_mm, na.rm = TRUE))` . 
+ 
