@@ -153,7 +153,6 @@ ggplot() +
   theme_void() +
   scale_fill_gradient(transform = "log10")
 
-
 ##### Adding Layers to Maps #####
 # The stars dataset has seastar counts (per m²) at field sites in California.
 head(stars)
