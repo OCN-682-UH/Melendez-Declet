@@ -2,7 +2,7 @@
 # Carolina Melendez Declet
 # cvmd@hawaii.edu
 # 10/06/2026
-# This script is to learn how to create maps in R Studio 
+# This script is to learn how to create maps in R Studio. 
 
 ##### Load Libraries ######
 library(tidyverse)
@@ -194,4 +194,5 @@ ggplot(world_sf) +
   coord_sf(crs = "+proj=robin") + # Robinson projection
   theme_void() +
   labs(title = "Robinson Projection")
+
 
