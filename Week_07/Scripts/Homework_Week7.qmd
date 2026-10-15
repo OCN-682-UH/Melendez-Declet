@@ -1,0 +1,143 @@
+---
+title: "Homework_Week7"
+author: "Carolina Melendez Declet"
+format: html
+---
+
+10/13/2026 
+
+Hello! This is my Quarto document for my **Week 7** homework. 
+
+Goals for this homework:
+
+- Make a map using Quarto with one of the following TidyTuesday datasets. 
+- Save your script and output appropriately.
+
+## Load Libraries 
+```{r}
+library(tidytuesdayR)
+library(here)
+library(tidyverse)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+
+This loads the libraries I need to use for my mapping. 
+
+## Download Data - Cats 
+```{r}
+#tuesdata <- tidytuesdayR::tt_load('2023-01-31')
+#tuesdata <- tidytuesdayR::tt_load(2023, week = 5)
+
+```
+
+I downloaded the cat dataset from TidyTuesdayR to use for my Week 7 mapping assignment. 
+
+## Load Data 
+```{r}
+#cats_uk <- tuesdata$cats_uk
+#cats_uk_reference <- tuesdata$cats_uk_reference
+
+#write_csv(cats_uk, here("Week_07", "Data", "cats_uk.csv"))
+
+#write_csv(cats_uk_reference, here("Week_07", "Data", "cats_uk_reference.csv"))
+
+cats_uk <- read_csv("../Data/cats_uk.csv")
+cats_uk_reference <- read_csv("../Data/cats_uk_reference.csv")
+
+
+head(cats_uk)
+
+```
+
+I loaded the two datasets containing info about cats in the UK. NOTE: 
+
+
+## Map of just the United Kingdom 
+```{r}
+#| label: fig-uk
+#| fig-cap: "Basic Map of the UK"
+
+world <- map_data("world")
+
+UK_data <- world |>
+  filter(region == "UK") 
+# Like we did in class with CA, but since UK is not a state, I did world instead
+
+UK_Map <- ggplot() +
+  geom_polygon(data = UK_data,
+               aes(x = long, y = lat,
+                   group = group),
+               fill = "pink", # the color you want the "state/country/whatever" to be filled with 
+               color = "black") +
+  coord_map() +
+  theme_void()
+
+UK_Map
+
+
+```
+
+@fig-uk I created a basic map of the United Kingdom. I filtered the world dataset to display only the UK. 
+
+## Add the cat GPS observation - Map by individual cat
+```{r}
+Cat_Map_Trial <- ggplot() +
+  geom_polygon(data = UK_data,
+               aes(x = long, y = lat,
+                   group = group),
+               fill = "lightgray",
+               color = "black") +
+  geom_point(data = cats_uk,
+             aes(x = location_long,
+                 y = location_lat,
+                 color = tag_id),
+             size = 0.5) +
+  coord_map() +
+  theme_void()
+
+Cat_Map_Trial
+```
+
+Okay so this looks a little **overwhelming**, I'm going to try plotting the data in a different way. Maybe by zooming in on the area where it was most recorded? 
+
+
+## Join the two cat datasets 
+```{r}
+Cats_Combo <- cats_uk |>
+  inner_join(cats_uk_reference, by = "tag_id")
+```
+
+I combined the two GPS tracking datasets using inner_join and using the "tag ID" column. 
+
+## Mapping 
+```{r}
+#| label: fig-kitty-map
+#| fig-cap: "GPS Locations of Cats by Reproductive Condition in the UK"
+
+Kitty_Map <- ggplot() +
+  geom_polygon(data = UK_data,
+               aes(x = long, y = lat, group = group),
+               fill = "#F8C8DC",
+               color = "black") +
+  geom_point(data = Cats_Combo,
+             aes(x = location_long, y = location_lat,
+                 color = animal_reproductive_condition),
+             size = 1.2, alpha = 0.5) +
+  coord_map(xlim = c(-6, -4), ylim = c(49.5, 51.5)) +
+  scale_color_manual(values = c("#2166ac", "#b2182b", "#4dac26","#7570b3")) +
+  labs(x = "Longitude", y = "Latitude",
+       color = "Reproductive Condition") +
+  theme_minimal() +
+  theme(panel.grid.major = element_line(color = "lightblue"),
+        panel.grid.minor = element_blank())
+
+Kitty_Map
+
+ggsave(here("Week_07","Outputs","KittyMap.png"))
+```
+Okay, I think this looks much better! In @fig-kitty-map, I zoomed in on southwestern England so we can get a better look at where the cats were tracked. In this figure, I plotted the cats by their reproductive condition. 
+
+## Open Access 
+My homework is published here * 
