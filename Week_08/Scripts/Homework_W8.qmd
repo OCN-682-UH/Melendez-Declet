@@ -1,0 +1,133 @@
+---
+title: "Homework_W8"
+author: "Carolina Melendez Declet"
+format: html
+---
+
+10/20/2026
+
+Hello! This is my Quarto document for my **Week 8** homework. 
+
+Goals for this homework:
+
+- Create any dataset you’d like
+- Write two useful functions: One that creates a plot & One that does something else
+- Create a Quarto document showing: At least 2 examples per function & evidence of the function’s flexibility
+
+## Load Libraries 
+```{r}
+library(tidyverse) 
+library(here)
+library(patchwork)
+library(praise)
+library(kableExtra)
+```
+
+## Load Data 
+```{r}
+UlvaFieldData <- read_csv(here("Week_08","Data","Base de datos_cphr.csv"),
+                          locale = locale(encoding = "Latin1")) |> # Ask Mica about this 
+  mutate(DateTime = mdy_hm(paste(Date, Time))) |>  #Ask Mica about this 
+  filter(Site_ID == "Collado" |
+         Site_ID == "Atravesado" |
+         Site_ID == "San Cristobal" |
+         Site_ID == "El Palo" |
+         Site_ID == "Laurel") |>  # This dataset had other reef sites that I will be not be using, so I filted the ones I need 
+  filter(DateTime >= as.Date("2025-01-01") & 
+       DateTime < as.Date("2026-01-01"))
+```
+
+This dataset contains monthly seawater water quality measurements collected from coral reef sites in La Parguera, Puerto Rico, between January and December 2025. 
+
+FYI - This dataset was created by my colleague, **Catherine Hernandez**, and will be a part of my final project in this course. I just wanted to go ahead and start on it, and practice writing functions using this dataset to become more prepared for the analysis I'll use for my final project.  
+
+## Writing Functions - Plot 
+```{r}
+WaterQualityPlot<- function(data = UlvaFieldData, x, y) {
+  pal <- c("Atravesado" = "#9E0142", "El Palo" = "#C51B7D", "Laurel" = "#DE77AE", "San Cristobal" = "#F1B6DA", "Collado" = "#4d9221")
+
+ggplot(UlvaFieldData, aes(x = {{x}}, y = {{y}},color = Site_ID, group= Site_ID)) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 2) +
+  scale_color_manual("Site", values = pal) +
+      theme_classic(base_size = 14)
+}
+```
+
+Here I create a function that will let me plot different water quality parameters over time without having to rewrite the same code over and over. 
+
+## Test - Plot Writing Functions 
+```{r}
+TempPlot <- WaterQualityPlot(x = Date, y = Temperature_Field) +
+  labs(x = "Date", y = "Temperature (°C)") +
+   theme(axis.text.x = element_blank(), # This removes the x axis legend title and the values 
+    axis.title.x = element_blank()) 
+
+SalPlot <- WaterQualityPlot(x = Date, y = Salinity) +
+  labs(x = "Date", y = "Salinity (PSU)")
+
+TempPlot
+SalPlot
+```
+
+I tested the functions on temperature and salinity, and it worked! Woohoo! 
+
+## Final Patchwork - Temp and Salinity 
+```{r}
+#| label: fig-chem-time-series
+#| fig-width: 12
+#| fig-height: 8
+
+ChemTimeSeries <- TempPlot / SalPlot +
+  plot_annotation(tag_levels = 'A') + # Add the letters to each plot 
+  plot_layout(guides ='collect') & # Have one legend 
+  theme(legend.position = "bottom") # Move legend to bottom
+
+ChemTimeSeries
+
+ggsave(here("Week_08", "Outputs", "Week8HomeworkPlot.png"),
+       width = 12,
+       height = 8)
+
+praise() # SO beautiful <3
+```
+
+@fig-chem-time-series I used patchwork() to combine temperature and salinity into a time series plot. I plan to use this code for my final project and add several other water quality parameters (DO, pH, Nutrients, nDIC, nTA). 
+
+## Writing Functions - Create Summary Stats for each site and each parameter 
+```{r}
+# https://dplyr.tidyverse.org/articles/programming.html
+
+WaterQualityStats <- function(UlvaFieldData, variable) {
+  
+  UlvaFieldData |> 
+    group_by(Site_ID) |> 
+    summarise(min = min({{variable}}, na.rm = TRUE),
+              max = max({{variable}}, na.rm = TRUE),
+              mean = mean({{variable}}, na.rm = TRUE))
+
+}
+```
+
+
+## Testing Function 
+```{r}
+TempStats <- WaterQualityStats(UlvaFieldData,variable = Temperature_Field)
+SalStats <- WaterQualityStats(UlvaFieldData,variable = Salinity)
+
+TempStats 
+SalStats
+```
+
+## Creating a Table 
+```{r}
+#| label: tbl-water-quality-stats
+
+ChemSummary <- TempStats |> 
+  left_join(SalStats, by = "Site_ID") |> 
+  kbl() |>
+  kable_classic() 
+
+ChemSummary
+```
+
