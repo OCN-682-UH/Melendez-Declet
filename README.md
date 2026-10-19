@@ -9,4 +9,4 @@ cvmd@hawaii.edu
 
 [Week 7 Homework] (https://01a1566b-1e8b-1c89-0a6c-45d7b0ba3251.share.connect.posit.cloud))
 
-[Week 8 Homework] (https://01a15669-6981-4fc3-88e7-ee3aaf629a10.share.connect.posit.cloud)
+[Week 8 Homework] (https://01a15673-a210-3621-ddf8-6ba96211c9df.share.connect.posit.cloud))
