@@ -12,18 +12,24 @@ library(tidyverse)
 library(here)
 ```
 
+This loads the libraries I need for my data analysis/plotting. 
 
 ## Load Data 
 ```{r}
 beacon <- read_csv(here("GoodPlotBadPlot","Data","beacon_data.csv")) |> 
           filter(ReefSiteName!="}") # Had one bad data point, so I filtered it out 
 ```
-This data is .... 
+This dataset is from the **BErmuda ocean Acidification and COral reef iNvestigation Project** (https://www.bco-dmo.org/project/2190). This project collected seawater carbonate chemistry parameters from four sites from the Bermuda coral reef platform: Bouy 33, Tyne's Bay, Mid Platform, and North Channel. The actual CSV file was given to me by Dr. Travis Courtney in his R Studio course in Fall 2025. 
 
 
 ## Bad Plot 
 
 ```{r}
+#| label: fig-ugly-plot 
+#| fig-cap: "Ugliest DIC vs TA Plot Ever"
+#| fig-width: 12
+#| fig-height: 8
+
 BadPlot <- beacon |> 
   ggplot(aes(x=DIC, y= TA)) +
   geom_point(color= "magenta", size=16, shape = 8, alpha=1) +
@@ -31,6 +37,8 @@ BadPlot <- beacon |>
   labs(title="BEACON!!!", x="DIC", y="TA")+
   theme(
     plot.title = element_text(size=47, color= "blue", face = "bold", hjust = 0.5),
+    panel.grid.major = element_line(color = "red"),
+    panel.grid.minor = element_line(color = "purple"),
     panel.background = element_rect(fill="green"),
     plot.background = element_rect(fill="orange"),
     axis.text = element_text(size=5),
@@ -43,8 +51,30 @@ ggsave(here("GoodPlotBadPlot", "Outputs", "BadPlot_CarolinaMD.png"),
        height = 8)
 ```
 
+@fig-ugly-plot is a good example of **bad** data visualization because the design makes it super difficult to see the relationship between dissolved inorganic carbon and total alkalinity.
+
+- Terrible background colors: The bright orange and neon green are distracting and make the figure hard to look at.
+
+- Missing information: The abbreviations DIC and TA are not defined, and I forgot to include their units (µmol/kg).
+
+- Ugly title: The title is not informative, uses a random color that doesn't match the rest of the figure, and has unnecessary exclamation points (not professional for publication)
+
+- Overlapping data points: The points overlap a lot, and the colors and shapes make it even harder to see individual observations.
+
+- Tiny axis text: The axis tick labels are way too small, making it difficult to read the actual values.
+
+- Too many gridlines: Adds even more clutter & it has crazy colors! They don't even match. 
+
+My eyes hurts. I don't think any journal reviewer would approve! #notcute 
+
+
 ## Good Plot 
 ```{r}
+#| label: fig-pretty-plot 
+#| fig-width: 12
+#| fig-height: 8
+
+
 GoodPlot <- beacon |> 
   ggplot(aes(x=DIC, y= TA, shape =ReefSiteName, color=ReefSiteName, group=ReefSiteName)) + #I want shapes for the reef sites
    geom_point(size = 3, alpha = 0.8, stroke = 0.8) +
@@ -53,10 +83,10 @@ GoodPlot <- beacon |>
    labs(x="Dissolved Inorganic Carbon (µmol/kg)", y="Total Alkalinity (µmol/kg)", shape = "Reef Site", color = "Reef Site")+ #Just learned that to change the legend title of a variable that has both a color & shape, you have to use color and shape 
    theme_classic()+
    theme(legend.position = "bottom",
-        axis.text = element_text(size=12),
-        axis.title = element_text(size=14),
-        legend.title= element_text(size=12),
-        legend.text= element_text(size=11))
+        axis.text = element_text(size=16),
+        axis.title = element_text(size=18),
+        legend.title= element_text(size=13),
+        legend.text= element_text(size=12))
 
 GoodPlot 
 
@@ -65,3 +95,22 @@ ggsave(here("GoodPlotBadPlot", "Outputs", "GoodPlot_CarolinaMD.png"),
        height = 8)
 ```
 
+@fig-pretty-plot is a **good** example of data visualization because the design is *simple*, clean, and easier to see the relationship bewteen DIC and TA at the sites. 
+
+- Simple background: The white background makes the figure look clean and allows the data to stand out.
+
+- Clear axis labels: Both axes include the full names of the water quality parameters AND their units.
+
+- No unnecessary title: I personally don't like adding titles to my figures. I prefer to include it in the figure caption. 
+
+- Better color choices: The different shades are easier to look at and help distinguish between reef sites without being too distracting.
+
+- Different shapes: Each reef site has a different point shape, and it makes it easier to identify observations from different sites.
+
+- Readable axis text: The axis labels and values are large enough for readers to see clearly.
+
+- Clear legend: The legend is placed at the bottom and helps readers identify which colors and shapes represent each reef site.
+
+- No gridlines: We didn't even need it in the first place for our data visuals. 
+
+Publication ready!! Will still probably have to be edited from reviewer comments lol. 
