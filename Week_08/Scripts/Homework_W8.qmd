@@ -27,14 +27,15 @@ library(kableExtra)
 ```{r}
 UlvaFieldData <- read_csv(here("Week_08","Data","Base de datos_cphr.csv"),
                           locale = locale(encoding = "Latin1")) |> # Ask Mica about this 
-  mutate(DateTime = mdy_hm(paste(Date, Time))) |>  #Ask Mica about this 
+  mutate(DateTime = mdy_hm(paste(Date, Time)),
+         Date_Fixed = mdy(Date)) |> 
   filter(Site_ID == "Collado" |
          Site_ID == "Atravesado" |
          Site_ID == "San Cristobal" |
          Site_ID == "El Palo" |
          Site_ID == "Laurel") |>  # This dataset had other reef sites that I will be not be using, so I filted the ones I need 
-  filter(DateTime >= as.Date("2025-01-01") & 
-       DateTime < as.Date("2026-01-01"))
+ filter(Date_Fixed >= as.Date("2025-01-01") & 
+      Date_Fixed < as.Date("2025-12-31"))
 ```
 
 This dataset contains monthly seawater water quality measurements collected from coral reef sites in La Parguera, Puerto Rico, between January and December 2025. 
@@ -47,23 +48,30 @@ WaterQualityPlot<- function(data = UlvaFieldData, x, y) {
   pal <- c("Atravesado" = "#9E0142", "El Palo" = "#C51B7D", "Laurel" = "#DE77AE", "San Cristobal" = "#F1B6DA", "Collado" = "#4d9221")
 
 ggplot(UlvaFieldData, aes(x = {{x}}, y = {{y}},color = Site_ID, group= Site_ID)) +
+    scale_x_date(
+    limits = as.Date(c("2025-1-01", "2025-12-17")),
+    date_breaks = "1 month",                
+    date_labels = "%b"          # Formats label (e.g., "Jan")
+  ) + 
   geom_line(linewidth = 0.9) +
   geom_point(size = 2) +
   scale_color_manual("Site", values = pal) +
       theme_classic(base_size = 14)
 }
+
+  # limits = c(min({{x}}), max({{x}})), 
 ```
 
 Here I create a function that will let me plot different water quality parameters over time without having to rewrite the same code over and over. 
 
 ## Test - Plot Writing Functions 
 ```{r}
-TempPlot <- WaterQualityPlot(x = Date, y = Temperature_Field) +
+TempPlot <- WaterQualityPlot(x = Date_Fixed, y = Temperature_Field) +
   labs(x = "Date", y = "Temperature (°C)") +
    theme(axis.text.x = element_blank(), # This removes the x axis legend title and the values 
     axis.title.x = element_blank()) 
 
-SalPlot <- WaterQualityPlot(x = Date, y = Salinity) +
+SalPlot <- WaterQualityPlot(x = Date_Fixed, y = Salinity) +
   labs(x = "Date", y = "Salinity (PSU)")
 
 TempPlot
@@ -118,16 +126,3 @@ SalStats <- WaterQualityStats(UlvaFieldData,variable = Salinity)
 TempStats 
 SalStats
 ```
-
-## Creating a Table 
-```{r}
-#| label: tbl-water-quality-stats
-
-ChemSummary <- TempStats |> 
-  left_join(SalStats, by = "Site_ID") |> 
-  kbl() |>
-  kable_classic() 
-
-ChemSummary
-```
-

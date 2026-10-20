@@ -1,0 +1,67 @@
+---
+title: "GoodPlotBadPlot"
+author: "Carolina Melendez Declet"
+format: html
+---
+
+10/20/2026 
+
+## Load Libraries 
+```{r}
+library(tidyverse) 
+library(here)
+```
+
+
+## Load Data 
+```{r}
+beacon <- read_csv(here("GoodPlotBadPlot","Data","beacon_data.csv")) |> 
+          filter(ReefSiteName!="}") # Had one bad data point, so I filtered it out 
+```
+This data is .... 
+
+
+## Bad Plot 
+
+```{r}
+BadPlot <- beacon |> 
+  ggplot(aes(x=DIC, y= TA)) +
+  geom_point(color= "magenta", size=16, shape = 8, alpha=1) +
+  geom_smooth(method = "lm", color = "yellow") +
+  labs(title="BEACON!!!", x="DIC", y="TA")+
+  theme(
+    plot.title = element_text(size=47, color= "blue", face = "bold", hjust = 0.5),
+    panel.background = element_rect(fill="green"),
+    plot.background = element_rect(fill="orange"),
+    axis.text = element_text(size=5),
+    axis.title = element_text(size=63))
+
+BadPlot
+
+ggsave(here("GoodPlotBadPlot", "Outputs", "BadPlot_CarolinaMD.png"),
+       width = 12,
+       height = 8)
+```
+
+## Good Plot 
+```{r}
+GoodPlot <- beacon |> 
+  ggplot(aes(x=DIC, y= TA, shape =ReefSiteName, color=ReefSiteName, group=ReefSiteName)) + #I want shapes for the reef sites
+   geom_point(size = 3, alpha = 0.8, stroke = 0.8) +
+   scale_color_manual(values = c("#67001f", "#b2182b", "#d6604d", "#f4a582"))+
+   scale_shape_manual(values= c(16,17,15,18))+ # these numbers are shapes for each reef site
+   labs(x="Dissolved Inorganic Carbon (µmol/kg)", y="Total Alkalinity (µmol/kg)", shape = "Reef Site", color = "Reef Site")+ #Just learned that to change the legend title of a variable that has both a color & shape, you have to use color and shape 
+   theme_classic()+
+   theme(legend.position = "bottom",
+        axis.text = element_text(size=12),
+        axis.title = element_text(size=14),
+        legend.title= element_text(size=12),
+        legend.text= element_text(size=11))
+
+GoodPlot 
+
+ggsave(here("GoodPlotBadPlot", "Outputs", "GoodPlot_CarolinaMD.png"),
+       width = 12,
+       height = 8)
+```
+

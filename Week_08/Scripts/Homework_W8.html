@@ -76,8 +76,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="Homework_W8_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Homework_W8_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="Homework_W8_files/libs/bootstrap/bootstrap-917079515d91bccb85b543faf8aa8bb6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="Homework_W8_files/libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="Homework_W8_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 
 </head>
@@ -159,14 +157,15 @@ The following object is masked from 'package:dplyr':
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>UlvaFieldData <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"Week_08"</span>,<span class="st">"Data"</span>,<span class="st">"Base de datos_cphr.csv"</span>),</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">"Latin1"</span>)) <span class="sc">|&gt;</span> <span class="co"># Ask Mica about this </span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DateTime =</span> <span class="fu">mdy_hm</span>(<span class="fu">paste</span>(Date, Time))) <span class="sc">|&gt;</span>  <span class="co">#Ask Mica about this </span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Site_ID <span class="sc">==</span> <span class="st">"Collado"</span> <span class="sc">|</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>         Site_ID <span class="sc">==</span> <span class="st">"Atravesado"</span> <span class="sc">|</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>         Site_ID <span class="sc">==</span> <span class="st">"San Cristobal"</span> <span class="sc">|</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>         Site_ID <span class="sc">==</span> <span class="st">"El Palo"</span> <span class="sc">|</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         Site_ID <span class="sc">==</span> <span class="st">"Laurel"</span>) <span class="sc">|&gt;</span>  <span class="co"># This dataset had other reef sites that I will be not be using, so I filted the ones I need </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DateTime <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-01"</span>) <span class="sc">&amp;</span> </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>       DateTime <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2026-01-01"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DateTime =</span> <span class="fu">mdy_hm</span>(<span class="fu">paste</span>(Date, Time)),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Date_Fixed =</span> <span class="fu">mdy</span>(Date)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Site_ID <span class="sc">==</span> <span class="st">"Collado"</span> <span class="sc">|</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>         Site_ID <span class="sc">==</span> <span class="st">"Atravesado"</span> <span class="sc">|</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>         Site_ID <span class="sc">==</span> <span class="st">"San Cristobal"</span> <span class="sc">|</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         Site_ID <span class="sc">==</span> <span class="st">"El Palo"</span> <span class="sc">|</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>         Site_ID <span class="sc">==</span> <span class="st">"Laurel"</span>) <span class="sc">|&gt;</span>  <span class="co"># This dataset had other reef sites that I will be not be using, so I filted the ones I need </span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(Date_Fixed <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-01"</span>) <span class="sc">&amp;</span> </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      Date_Fixed <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2026-01-01"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>New names:
 Rows: 88 Columns: 17
@@ -199,23 +198,30 @@ Caused by warning:
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  pal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Atravesado"</span> <span class="ot">=</span> <span class="st">"#9E0142"</span>, <span class="st">"El Palo"</span> <span class="ot">=</span> <span class="st">"#C51B7D"</span>, <span class="st">"Laurel"</span> <span class="ot">=</span> <span class="st">"#DE77AE"</span>, <span class="st">"San Cristobal"</span> <span class="ot">=</span> <span class="st">"#F1B6DA"</span>, <span class="st">"Collado"</span> <span class="ot">=</span> <span class="st">"#4d9221"</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(UlvaFieldData, <span class="fu">aes</span>(<span class="at">x =</span> {{x}}, <span class="at">y =</span> {{y}},<span class="at">color =</span> Site_ID, <span class="at">group=</span> Site_ID)) <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="st">"Site"</span>, <span class="at">values =</span> pal) <span class="sc">+</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"2025-1-01"</span>, <span class="st">"2025-12-30"</span>)),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_breaks =</span> <span class="st">"1 month"</span>,                </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_labels =</span> <span class="st">"%b"</span>          <span class="co"># Formats label (e.g., "Jan")</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="st">"Site"</span>, <span class="at">values =</span> pal) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># limits = c(min({{x}}), max({{x}})), </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here I create a function that will let me plot different water quality parameters over time without having to rewrite the same code over and over.</p>
 </section>
 <section id="test---plot-writing-functions" class="level2">
 <h2 class="anchored" data-anchor-id="test---plot-writing-functions">Test - Plot Writing Functions</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>TempPlot <span class="ot">&lt;-</span> <span class="fu">WaterQualityPlot</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Temperature_Field) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>TempPlot <span class="ot">&lt;-</span> <span class="fu">WaterQualityPlot</span>(<span class="at">x =</span> Date_Fixed, <span class="at">y =</span> Temperature_Field) <span class="sc">+</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Temperature (°C)"</span>) <span class="sc">+</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(), <span class="co"># This removes the x axis legend title and the values </span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>()) </span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>SalPlot <span class="ot">&lt;-</span> <span class="fu">WaterQualityPlot</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Salinity) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>SalPlot <span class="ot">&lt;-</span> <span class="fu">WaterQualityPlot</span>(<span class="at">x =</span> Date_Fixed, <span class="at">y =</span> Salinity) <span class="sc">+</span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Salinity (PSU)"</span>)</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>TempPlot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -253,7 +259,7 @@ Caused by warning:
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">praise</span>() <span class="co"># SO beautiful &lt;3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "You are sensational!"</code></pre>
+<pre><code>[1] "You are amazing!"</code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-chem-time-series" class="quarto-float quarto-figure quarto-figure-center anchored" width="1152">
@@ -300,101 +306,19 @@ Figure&nbsp;1
 1 Atravesado     27.1  30.3  28.5
 2 Collado        27.5  30.3  28.7
 3 El Palo        27    30.2  28.5
-4 Laurel         27.1  30.0  28.5
-5 San Cristobal  27.2  29.5  28.4</code></pre>
+4 Laurel         27.1  30.0  28.4
+5 San Cristobal  27.2  30.1  28.6</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SalStats</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 4
   Site_ID         min   max  mean
   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 Atravesado     33.2  37.1  35.4
-2 Collado        33.0  37.1  35.0
+1 Atravesado     33.2  37.1  35.3
+2 Collado        33.0  37.1  35.1
 3 El Palo        33.4  37    35.3
 4 Laurel         33.5  37.1  35.3
-5 San Cristobal  33.3  37.1  35.6</code></pre>
-</div>
-</div>
-</section>
-<section id="creating-a-table" class="level2">
-<h2 class="anchored" data-anchor-id="creating-a-table">Creating a Table</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ChemSummary <span class="ot">&lt;-</span> TempStats <span class="sc">|&gt;</span> </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(SalStats, <span class="at">by =</span> <span class="st">"Site_ID"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">|&gt;</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>ChemSummary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="tbl-water-quality-stats" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-water-quality-stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1
-</figcaption>
-<div aria-describedby="tbl-water-quality-stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="lightable-classic caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Site_ID</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">min.x</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">max.x</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">mean.x</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">min.y</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">max.y</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">mean.y</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Atravesado</td>
-<td style="text-align: right;">27.07</td>
-<td style="text-align: right;">30.30</td>
-<td style="text-align: right;">28.54100</td>
-<td style="text-align: right;">33.18</td>
-<td style="text-align: right;">37.06</td>
-<td style="text-align: right;">35.36900</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Collado</td>
-<td style="text-align: right;">27.48</td>
-<td style="text-align: right;">30.26</td>
-<td style="text-align: right;">28.67000</td>
-<td style="text-align: right;">33.03</td>
-<td style="text-align: right;">37.10</td>
-<td style="text-align: right;">35.00636</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">El Palo</td>
-<td style="text-align: right;">27.00</td>
-<td style="text-align: right;">30.19</td>
-<td style="text-align: right;">28.49417</td>
-<td style="text-align: right;">33.45</td>
-<td style="text-align: right;">37.00</td>
-<td style="text-align: right;">35.31167</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Laurel</td>
-<td style="text-align: right;">27.11</td>
-<td style="text-align: right;">30.02</td>
-<td style="text-align: right;">28.54000</td>
-<td style="text-align: right;">33.48</td>
-<td style="text-align: right;">37.13</td>
-<td style="text-align: right;">35.32444</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">San Cristobal</td>
-<td style="text-align: right;">27.18</td>
-<td style="text-align: right;">29.48</td>
-<td style="text-align: right;">28.41556</td>
-<td style="text-align: right;">33.34</td>
-<td style="text-align: right;">37.12</td>
-<td style="text-align: right;">35.57556</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
+5 San Cristobal  33.3  37.1  35.4</code></pre>
 </div>
 </div>
 </section>
