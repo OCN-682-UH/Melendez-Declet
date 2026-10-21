@@ -15,7 +15,6 @@ Goals for this homework:
 
 ## Load Libraries 
 ```{r}
-library(tidytuesdayR)
 library(here)
 library(tidyverse)
 library(maps)
@@ -43,9 +42,9 @@ I downloaded the cat dataset from TidyTuesdayR to use for my Week 7 mapping assi
 
 #write_csv(cats_uk_reference, here("Week_07", "Data", "cats_uk_reference.csv"))
 
-cats_uk <- read_csv("../Data/cats_uk.csv")
-cats_uk_reference <- read_csv("../Data/cats_uk_reference.csv")
+cats_uk <- read_csv(here("Week_07", "Data", "cats_uk.csv"))
 
+cats_uk_reference <- read_csv(here("Week_07", "Data", "cats_uk_reference.csv"))
 
 head(cats_uk)
 

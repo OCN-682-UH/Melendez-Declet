@@ -1,9 +1,8 @@
-###### Homework Week 4 Part 1 #######
+###### Intro to Data Wrangling Script #######
 # Carolina Melendez Declet
 # cvmd@hawaii.edu
-# 09/22/2026 
-# This script can calculate the mean and variance of body mass by species, island, and sex without any NAs. It also filters out (i.e. excludes) male penguins, then calculates the log body mass, 
-# then selects only the columns for species, island, sex, and log body mass, then use these data to make any plot. 
+# 09/25/2026 
+# This script is to learn how Data Wrangling: dplyr 
 
 ###### Load Libraries ######
 library(palmerpenguins)
@@ -13,6 +12,16 @@ library(praise)
 library(dplyr)
 library(patchwork)
 
+
+###### Homework Instructions #######
+# Write a script that: 
+## calculates the mean and variance of body mass by species, island, and sex without any NAs
+
+# AND 
+
+# filters out (i.e. excludes) male penguins, then calculates the log body mass, 
+#then selects only the columns for species, island, sex, and log body mass, then use these data to make any plot. 
+# Make sure the plot has clean and clear labels and follows best practices. Save the plot in the correct output folder.
 
 ###### Load Data #####
 # This data is part of the package and is called penguins. We are practicing 
