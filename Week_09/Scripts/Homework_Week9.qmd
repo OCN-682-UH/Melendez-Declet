@@ -1,0 +1,89 @@
+---
+title: "Homework_Week9"
+author: "Carolina Melendez Declet"
+format: html
+---
+
+10/26/26
+
+Aloha! This is my Quarto document for my **Week 9** homework. 
+
+Goals for this homework:
+
+- Working with intertidal data. Your goal is to make a plot where at least one axis is a factor in a meaningful order.
+
+## Load Libraries 
+```{r}
+#| message: false
+
+library(tidyverse) 
+library(here)
+library(janitor)
+library(praise)
+```
+
+## Load Data 
+```{r}
+#| message: false
+
+intertidal <- read_csv(here("Week_09","Data","intertidaldata.csv"))
+intertidal_lat <- read_csv(here("Week_09","Data","intertidaldata_latitude.csv"))
+```
+
+This dataset contains observations of organisms in the intertidal across different sites and tide heights. 
+
+## Check Data
+```{r}
+glimpse(intertidal)
+unique(intertidal$Quadrat)
+```
+
+## Combine Data
+```{r}
+intertidal_final <- intertidal |>
+  left_join(intertidal_lat, by = "Site")
+
+glimpse(intertidal_final)
+```
+
+## Cleanup Final Data 
+```{r}
+intertidal_final <- intertidal_final |>
+  clean_names() |> # Makes column names lowercase and consistent, after using this code, you have to type your column names in lowercase when coding 
+  mutate(quadrat = recode(quadrat, "Low  ." = "Low", "Mid  1" = "Mid"), # there were some quadrats written incorrectly, so fixing here
+    quadrat = factor(quadrat, levels = c("Low", "Mid", "High")), # reorders the tide height from low to high
+    site = fct_reorder(site, latitude)) # reorders the sites from South to North just from using the latitude, pretty cool 
+```
+
+Here I cleaned the column names and fixed some of the data observations that were written incorrectly. Then I used factor() to order the tide heights from Low to High and fct_reorder() to arrange the sites by latitude from south to north.
+
+## Final Plot 
+```{r}
+#| label: fig-algae-plot 
+#| fig-width: 12
+#| fig-height: 8
+
+# Trying out a boxplot for fun 
+
+AlgaePlot <- intertidal_final |>
+  ggplot(aes(x = site, y = algae, fill = quadrat)) +
+  geom_boxplot(alpha = 0.8) + # transparency of the boxplot 
+  facet_wrap(~quadrat, ncol = 1) + # You can specify the number of columns/rows to display using facet_wrap with "ncol"
+  scale_fill_manual(values = c("Low" = "#3182bd", "Mid" = "#6baed6", "High" = "#08519c")) + # Shoutout to colorbrewer, using "fill" because it is a boxplot 
+  labs(x = "Site (South to North)", y = "Algae Cover (%)", fill = "Tide Height") +
+  theme_classic() +
+  theme(legend.position = "none", # don't need a legend because it is clear in the figure 
+        axis.text = element_text(size = 11),
+        axis.title = element_text(size = 13),
+        axis.text.x = element_text(angle = 45, hjust = 1)) #hjust, helps the text in the x axis horizonatlly and in a angle
+
+AlgaePlot
+
+praise() # Thank you!!!
+
+ggsave(here("Week_09", "Outputs", "Week9HomeworkPlot.png"),
+       width = 12,
+       height = 8)
+```
+
+@fig-algae-plot shows the distribution of percent algae cover across all the intertidal sites ordered by latitude from south to north. I used facet_wrap() to separate the Low, Mid, and High tide heights into three panels, which makes it easier to compare algae cover across the sites and tide heights. 
