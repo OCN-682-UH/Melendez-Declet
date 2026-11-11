@@ -1,0 +1,12 @@
+name: mystarapp
+title: MyStarApp
+username: carolinamelendezdeclet
+account: carolinamelendezdeclet
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 01a1c802-2e08-0f54-5f64-a6be4a11dc71
+bundleId:
+url: https://connect.posit.cloud/carolinamelendezdeclet/content/01a1c802-2e08-0f54-5f64-a6be4a11dc71
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
