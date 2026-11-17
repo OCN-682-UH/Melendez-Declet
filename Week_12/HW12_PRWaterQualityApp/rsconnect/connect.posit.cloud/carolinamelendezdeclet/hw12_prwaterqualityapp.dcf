@@ -1,0 +1,12 @@
+name: hw12_prwaterqualityapp
+title: HW12_PRWaterQualityApp
+username: carolinamelendezdeclet
+account: carolinamelendezdeclet
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 01a1eade-a9a1-e667-b26e-7fec419cd450
+bundleId:
+url: https://connect.posit.cloud/carolinamelendezdeclet/content/01a1eade-a9a1-e667-b26e-7fec419cd450
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
