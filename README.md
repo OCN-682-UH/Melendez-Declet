@@ -14,3 +14,5 @@ cvmd@hawaii.edu
 [GoodPlotBadPlot](https://01a157b1-c34f-75b1-ab96-c2e144769028.share.connect.posit.cloud)
 
 [Week 9 Homework](https://01a17f07-c44c-692c-7575-3399948d96d1.share.connect.posit.cloud)
+
+[Week 12 Homework](https://01a1eade-a9a1-e667-b26e-7fec419cd450.share.connect.posit.cloud)
