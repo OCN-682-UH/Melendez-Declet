@@ -1,0 +1,118 @@
+---
+title: "Homework_13"
+format: html
+author: "Carolina Melendez Declet"
+---
+
+11/24/26
+
+Aloha! This is my Quarto document for my **Week 13** homework. 
+
+Goals for this homework:
+
+- You have a set of 4 .csv files in data/homework. Each file is a time series of temperature and light data collected in tide pools in Oregon by Jenn Fields.
+- Bring in all 4 files and calculate the mean and standard deviation of both temperature (Temp.C) and light (Intensity.lux) for each tide pool.
+- Use both a for loop and map() functions in your script (basically, do it twice).
+
+## Load Libraries 
+```{r}
+#| message: false
+
+library(tidyverse)
+library(here)
+library(praise)
+```
+
+# Method 1: For loop 
+
+## Load Data 
+```{r}
+# Point to the folder on the computer with all the tide pool data 
+
+TidePath <- here("Week_13", "Data", "homework")
+
+# List all files in that path matching a pattern (here, anything with .csv)
+files <- dir(path = TidePath, pattern = ".csv")
+
+files
+```
+Perfect! Let's move forward 
+
+## Pre-allocate space for the loop
+```{r}
+tidepool_data <- tibble(filename = rep(NA, length(files)),
+                    mean_temp = rep(NA, length(files)),
+                    sd_temp = rep(NA, length(files)),
+                    mean_light = rep(NA, length(files)),
+                    sd_light = rep(NA, length(files)))
+
+tidepool_data
+```
+
+Here, I'm calculating the mean & standard deviation of both temperature (Temp.C) and light (Intensity.lux) for each tide pool and saving it 
+
+## Test: Reading in the first file
+```{r}
+raw_data <- read_csv(paste0(TidePath, "/", files[1]))
+head(raw_data)
+
+mean_temp <- mean(raw_data$Temp.C, na.rm = TRUE)
+mean_temp
+
+sd_temp <- sd(raw_data$Temp.C, na.rm = TRUE)
+sd_temp
+
+mean_light <- mean(raw_data$Intensity.lux, na.rm = TRUE)
+mean_light
+
+sd_light <- sd(raw_data$Intensity.lux, na.rm = TRUE)
+sd_light
+
+praise()
+```
+
+## Creating the for loop
+```{r}
+for (i in seq_along(files)) {
+  
+  raw_data <- read_csv(paste0(TidePath, "/", files[i]))
+  
+  tidepool_data$filename[i] <- files[i]
+  tidepool_data$mean_temp[i] <- mean(raw_data$Temp.C, na.rm = TRUE)
+  tidepool_data$sd_temp[i] <- sd(raw_data$Temp.C, na.rm = TRUE)
+  tidepool_data$mean_light[i] <- mean(raw_data$Intensity.lux, na.rm = TRUE)
+  tidepool_data$sd_light[i] <- sd(raw_data$Intensity.lux, na.rm = TRUE)
+}
+
+tidepool_data
+
+praise() # Slayed 
+```
+
+# Method 2: purrr
+
+## Load Data 
+
+```{r}
+TidePoolPath_purrr <- here("Week_13", "Data", "homework")
+
+files_purrr <- dir(path = TidePoolPath_purrr, pattern = ".csv", full.names = TRUE)
+
+files_purrr
+```
+Although I already loaded the data, here I am using purrr instead of a for loop.  
+
+## Calculate Mean & Standard Deviation 
+```{r}
+data <- files_purrr |>
+  set_names() |>
+  map(read_csv) |>
+  list_rbind(names_to = "filename") |>
+  group_by(filename) |>
+  summarise(mean_temp = mean(Temp.C, na.rm = TRUE),
+            sd_temp = sd(Temp.C, na.rm = TRUE),
+            mean_light = mean(Intensity.lux, na.rm = TRUE),
+            sd_light = sd(Intensity.lux, na.rm = TRUE))
+data
+```
+
